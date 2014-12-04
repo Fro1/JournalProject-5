@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import <GooglePlus/GooglePlus.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -15,13 +16,24 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [Parse setApplicationId:@"746JYswYgb4bVdCqZMK8OPbOzreuzNOkVfBiCx2E" clientKey:@"Ld5TaFgbtGb6Y4ttrnaEqkBVzy4emf30Jrn6aOQ8"];
+    // Override point for customization after application launch.
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+    splitViewController.displayModeButtonItem.title = @"Navigation";
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    navigationController.topViewController.navigationItem.leftBarButtonItem.title = @"Navigation";
     splitViewController.delegate = self;
+    
     return YES;
 }
 
@@ -45,6 +57,15 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application: (UIApplication *)application
+            openURL: (NSURL *)url
+  sourceApplication: (NSString *)sourceApplication
+         annotation: (id)annotation {
+    return [GPPURLHandler handleURL:url
+                  sourceApplication:sourceApplication
+                         annotation:annotation];
 }
 
 #pragma mark - Split view
